@@ -1,0 +1,132 @@
+<?php
+require "dbconn.php";
+?>
+
+<html>
+<head>
+    <meta charset="gbk">
+    <title>PHP实现商品按销量价格排序</title>
+    <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+    <style>
+        .main{width:212px;height:30px;line-height:30px;color:#666;border:1px solid #999;margin-left:100px;}
+        .main a{cursor: pointer;}
+        .main .sort{width:70px;float:left;text-align:center;border-right:1px solid #999;}
+        .main .sort2{width:70px;float:left;text-align:center;border-right:1px solid #999;}
+        .main .sort3{width:70px;float:right;text-align:center;}
+        .main .icon{background:url(images/default.png) no-repeat;width:20px;height:30px;background-position:1px 10px;float:right;color:#ff4200;}
+        .main .icon2{background:url(images/high.png) no-repeat;width:20px;height:30px;background-position:1px 10px;float:right;color:#ff4200;}
+        .main .icon3{background:url(images/low.png) no-repeat;width:20px;height:30px;background-position:1px 10px;float:right;color:#ff4200;}
+        .content{width:320px;height:240px;line-height:30px;color:#333;border:1px solid #999;margin-top:10px;margin-left:100px;}
+        .content .title{color:red;height:30px;background: #ddd;}
+        .content .datalist{width:100%;height:30px;text-align:left;}
+        .content .datalist .id{width:60px;float:left;padding:0 10px;}
+        .content .datalist .name{width:100px;float:left;}
+        .content .datalist .sales{width:60px;float:left;}
+        .content .datalist .price{width:70px;float:left;}
+    </style>
+</head>
+<body>
+    <script>
+        function sort_data(sort,num){
+            if(sort=="sales"){//销量
+                if(num==2){
+                    $("#iconse2").addClass("icon2");
+                    $("#iconse2").removeClass("icon3");
+                    $("#iconse3").removeClass("icon2");
+                    $("#iconse3").removeClass("icon3");
+                    window.location.href='/sort/?sort=1';
+                }else{
+                    $("#iconse2").addClass("icon3");
+                    $("#iconse2").removeClass("icon2");
+                    $("#iconse3").removeClass("icon2");
+                    $("#iconse3").removeClass("icon3");
+                    window.location.href='/sort/?sort=2';
+                }
+            }else if(sort=="price"){//价格
+                if(num==4){
+                    $("#iconse3").addClass("icon2");
+                    $("#iconse3").removeClass("icon3");
+                    $("#iconse2").removeClass("icon2");
+                    $("#iconse2").removeClass("icon3");
+                    window.location.href='/sort/?sort=3';
+                }else{
+                    $("#iconse3").addClass("icon3");
+                    $("#iconse3").removeClass("icon2");
+                    $("#iconse2").removeClass("icon2");
+                    $("#iconse2").removeClass("icon3");
+                    window.location.href='/sort/?sort=4';
+                }
+            }else{
+                $("#iconse3").removeClass("icon2");
+                $("#iconse3").removeClass("icon3");
+                $("#iconse2").removeClass("icon2");
+                $("#iconse2").removeClass("icon3");
+                window.location.href='/sort/';
+            }
+        }
+    </script>
+    
+    <div class="main">
+        <div class="sort">
+      <a id="default" onclick="sort_data('default',0)">默认
+          <i id="iconse" class="connent icon"></i>
+      </a>
+    </div>
+      <div class="sort2">
+      <a id="sales" onclick="sort_data('sales',<?php echo $sort;?>)">销量
+          <i id="iconse2" class=" 
+              <?php 
+              if($sort==1 || $sort==2){
+              ?>
+                  <?php if($sort==1){?>icon2<?php } ?> 
+                  <?php if($sort==2){?>icon3<?php } ?> 
+              <?php 
+              }else{
+              ?>
+              icon
+              <?php
+              }
+              ?>"></i>
+      </a>
+    </div>
+    <div class="sort3">
+      <a id="price" onclick="sort_data('price',<?php echo $sort;?>)">价格
+          <i id="iconse3" class=" 
+              <?php 
+              if($sort==3 || $sort==4){
+              ?>
+                  <?php if($sort==3){?>icon2<?php } ?> 
+                  <?php if($sort==4){?>icon3<?php } ?> 
+              <?php 
+              }else{
+              ?>
+              icon
+              <?php
+              }
+              ?>"></i>
+      </a>
+    </div>
+    </div>
+    
+    <div class="content">
+        <div class="datalist title">
+            <div class="id">ID</div>
+            <div class="name">名称</div>
+            <div class="sales">销量</div>
+            <div class="price">价格</div>
+        </div>
+        <?php foreach($data_arr as $val){?>
+            <div class="datalist">
+                <input type="hidden" id="sales" value="{$sales}">
+        <input type="hidden" id="price" value="{$price}">
+                <div class="id"><?php echo $val['id']?></div>
+                <div class="name"><?php echo $val['name']?></div>
+                <div class="sales"><?php echo $val['sales']?></div>
+                <div class="price"><?php echo $val['price']?></div>
+            </div>
+        <?php
+        }
+        ?>
+    </div>
+</body>
+</html>
